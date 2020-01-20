@@ -11,6 +11,7 @@ exports.addRestaurant = (req, res) => {
     let phone = req.body.phone;
     let averageBill = req.body.averageBill;
     let amountOfPlace = req.body.amountOfPlace;
+    let rate = req.body.rate;
     let kitchens=JSON.parse(req.body.kitchens)
 
     let newRestaurant = {
@@ -21,6 +22,7 @@ exports.addRestaurant = (req, res) => {
         averageBill:averageBill,
         amountOfPlace: amountOfPlace,
         kitchens:kitchens,
+        rate:rate
     };
     db.Restaurant.create(newRestaurant)
         .then(restaurant => {
@@ -142,13 +144,17 @@ exports.updateRestaurant = (req,res)=>{
     let phone = req.body.phone;
     let averageBill = req.body.averageBill;
     let amountOfPlace = req.body.amountOfPlace;
+    let rate = req.body.rate;
+    let kitchens=JSON.parse(req.body.kitchens)
     let updatedRestaurant={
         name:name,
         image:image,
         location:location,
         phone:phone,
         averageBill:averageBill,
-        amountOfPlace: amountOfPlace
+        kitchens:kitchens,
+        amountOfPlace: amountOfPlace,
+        rate:rate
     }
     db.Restaurant.update(updatedRestaurant,{
         where:{
