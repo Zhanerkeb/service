@@ -96,6 +96,7 @@ exports.login = (req, res) => {
                                 success: true,
                                 id: user.id,
                                 token: token,
+                                role: user.role,
                             });
                         }
                     );
