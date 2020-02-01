@@ -37,7 +37,18 @@ exports.addRestaurant = (req, res) => {
 };
 
 exports.getRestaurants = (req,res)=>{
-    db.Restaurant.findAll()
+    db.Restaurant.findAll({
+        include:[{
+            model:db.ResKitList,
+            attributes: ['id'],
+            required:true,
+            include:[{
+                model: db.Kitchen,
+                required:true,
+            }]
+        }],
+
+    })
         .then(restaurants=>{
             res.send(restaurants)
             console.log(restaurants.length)
@@ -56,7 +67,14 @@ exports.searchRestaurants = async (req,res)=>{
             }
         }
 
-
+        let restaurantsCount = await db.Restaurant.findOne({
+            where: sequelize.or(
+                { name: {[Op.like]: "%" + query + "%"} } ,
+            ),
+            attributes: [
+                [sequelize.fn('count', sequelize.col('id')), 'total']
+            ],
+        });
         let restaurants = await db.Restaurant.findAll({
             where: {
                 name: {[Op.like]: "%" + query + "%"}
@@ -66,7 +84,11 @@ exports.searchRestaurants = async (req,res)=>{
 
         });
 
-        res.send(restaurants);
+        res.send({
+            restaurants: restaurants,
+            pageSize: resultsPerPage.product,
+            total: restaurantsCount.dataValues.total
+        });
     }catch (e) {
         console.log(e);
         res.send(e)
