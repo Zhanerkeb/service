@@ -17,14 +17,15 @@ exports.addFavorites = (req, res) => {
 exports.getById = (req,res)=>{
     let userId=req.user.id
 
-    db.Restaurant.findAll({
+    db.Favorites.findAll({
+        where:{
+            userId:userId,
+        },
+        attributes:['id'],
         include:[{
-            model:db.Favorites,
-            where:{
-                userId:userId,
-
-            }
-        }],
+            model: db.Restaurant,
+            attributes:['name','image'],
+        }]
     })
         .then(favorite=>{
             res.send(favorite)

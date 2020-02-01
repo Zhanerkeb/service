@@ -21,14 +21,15 @@ exports.addOrder = (req, res) => {
 exports.getById = (req,res)=>{
     let userId=req.user.id
 
-    db.Restaurant.findAll({
-        include:[{
-            model:db.Order,
+    db.Order.findAll({
             where:{
                 userId:userId,
-
-            }
-        }],
+            },
+        attributes: ['id','orderdate','guest'],
+        include:[{
+            model: db.Restaurant,
+            attributes:['name','image'],
+        }]
     })
         .then(order=>{
             res.send(order)
