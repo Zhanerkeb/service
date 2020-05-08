@@ -11,7 +11,7 @@ exports.register = (req, res) => {
     const {errors, isNotValid} = validateRegisterInput(req.body);
 
     if(isNotValid) {
-        return res.status(400).send(errors);
+        return res.status(400).send({error: "Password field should contain at least 6 chars and at most 40 chars"});
     }
 
     let name = req.body.name;
@@ -41,6 +41,7 @@ exports.register = (req, res) => {
                     newUser.password = hash;
                     db.User.create(newUser)
                         .then(user => {
+
                             res.json(user);
                         })
                         .catch(err => console.log(err))
@@ -70,7 +71,7 @@ exports.login = (req, res) => {
         }
     }).then(user =>{
         if(!user) {
-            errors.email = "There not user with such email";
+            errors.error = "There not user with such email";
             res.status(400).send(errors);
             return;
         }
@@ -101,12 +102,12 @@ exports.login = (req, res) => {
                         }
                     );
                 } else {
-                    errors.password = 'Password incorrect';
+                    errors.error = 'Password incorrect';
                     return res.status(400).send(errors);
                 }
             })  .catch(err => {
             console.log(err);
-            errors.bcrypt = "Error while comparing passwords";
+            errors.error = "Error while comparing passwords";
             return res.status(500).send(errors)
         })
 

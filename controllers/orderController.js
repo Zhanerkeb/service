@@ -4,6 +4,7 @@ exports.addOrder = (req, res) => {
     let guest = req.body.guest
     let orderdate = req.body.orderdate
     let restaurantId = req.body.restaurantId
+    console.log(userId, guest, orderdate, restaurantId)
     let newOrder = {
         userId:userId,
         restaurantId:restaurantId,

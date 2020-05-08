@@ -13,7 +13,7 @@ exports.addReview = (req, res) => {
             res.send(review)
         }).catch(err => {
         console.log(err);
-        res.status(500).send({error: "Error while adding new review"+err});
+        res.status(500).send({error: "Error while adding new review" + err});
     })
 };
 exports.getReviews = (req,res)=>{
