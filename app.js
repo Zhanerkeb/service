@@ -27,4 +27,4 @@ app.use('/api/restaurant', restaurant.restaurantRouter);
 app.use('/api/review', review.reviewRouter);
 app.use('/api/order', order.orderRouter);
 app.use('/api/favorite', favorite.favoriteRouter);
-app.listen(5000, () => console.log(`Server running on port 5000`));
+app.listen(9000, () => console.log(`Server running on port 5000`));
