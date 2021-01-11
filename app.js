@@ -19,6 +19,7 @@ db.sequelize.sync({logging: false}).then(() => {
     console.log('Drop and Resync with { force: true }');
 });
 app.use(passport.initialize());
+app.use(express.static(__dirname + '/media'));
 
 require('./config/passport')(passport);
 app.use('/api/users', user.userRouter);
@@ -27,4 +28,6 @@ app.use('/api/restaurant', restaurant.restaurantRouter);
 app.use('/api/review', review.reviewRouter);
 app.use('/api/order', order.orderRouter);
 app.use('/api/favorite', favorite.favoriteRouter);
+
 app.listen(9000, () => console.log(`Server running on port 5000`));
+
