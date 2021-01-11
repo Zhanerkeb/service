@@ -19,7 +19,7 @@ db.sequelize.sync({logging: false}).then(() => {
     console.log('Drop and Resync with { force: true }');
 });
 app.use(passport.initialize());
-app.use(express.static(__dirname + '/media/Restaurant'));
+app.use(express.static(__dirname + '/'));
 
 require('./config/passport')(passport);
 app.use('/api/users', user.userRouter);
