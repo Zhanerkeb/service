@@ -14,40 +14,59 @@ exports.addKitchen = (req, res) => {
     })
 };
 
-exports.getKitchens = (req,res)=>{
-    db.Kitchen.findAll()
-        .then(kitchens=>{
-            res.send(kitchens)
-            console.log(kitchens.length)
-        }).catch(err=>{
-            res.status(500).send({error:err})
+exports.getKitchens = (req, res) => {
+    db.Kitchen.findAll({
+        order: [
+            ['id', 'ASC']
+        ]
+    }).then(kitchens => {
+        res.send(kitchens)
+    }).catch(err => {
+        res.status(500).send({error: err})
     })
 }
-exports.updateKitchen = (req,res)=>{
-    let kitchenId=req.params.kitchenId;
-    let name= req.body.name;
-    let updatedKitchen={
-        name:name
-    }
-    db.Kitchen.update(updatedKitchen,{
-        where:{
-            id:kitchenId
+
+exports.updateKitchen = async (req, res) => {
+    let kitchenId = req.params.kitchenId;
+    let name = req.body.name;
+    db.Kitchen.update({
+        name: name
+    }, {
+        where: {
+            id: kitchenId
         }
-    }).then(updatedRowsCount=>{
-        res.send({updated:updatedRowsCount})
-    }).catch(err=>{
-        res.status(500).send({error:"Error while updating kitchen: "+err})
+    }).then(isUpdated => {
+        if (isUpdated == 0) {
+            isUpdated = "There is no kitchen with this ID"
+            res.send({updated: isUpdated, kitchenId})
+        } else {
+            isUpdated = "Updated successfully"
+            res.send({updated: isUpdated, kitchenId, name})
+        }
+    }).catch(err => {
+        res.status(500).send({error: "Error while updating kitchen: " + err})
     })
 }
-exports.deleteKitchen = (req,res)=>{
-    let kitchenId=req.params.kitchenId;
+
+exports.deleteKitchen = async (req, res) => {
+    let kitchenId = req.params.kitchenId;
+    let kitchenName = (await db.Kitchen.findOne({
+        where: {id: kitchenId},
+        attributes: ['name']
+    })).name
     db.Kitchen.destroy({
-        where:{
-            id:kitchenId
+        where: {
+            id: kitchenId
         }
-    }).then(isDeleted=>{
-        res.send({deleted:isDeleted})
-    }).catch(err=>{
-        res.status(500).send({error:"Error while deleting kitchen: "+err})
+    }).then(isDeleted => {
+        if (isDeleted == 0) {
+            isDeleted = "There is no kitchen with this ID"
+            res.send({deleted: isDeleted, kitchenId})
+        } else {
+            isDeleted = "Deleted successfully"
+            res.send({deleted: isDeleted, kitchenId, kitchenName})
+        }
+    }).catch(err => {
+        res.status(500).send({error: "Error while deleting kitchen: " + err})
     })
 }
