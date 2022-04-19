@@ -9,7 +9,6 @@ restaurantRouter.post('/', passport.authenticate('jwt', {session: false}),
 restaurantRouter.get('/get', restaurantController.getRestaurants)
 restaurantRouter.get('/:restaurantId', passport.authenticate('jwt', {session: false}),
     restaurantController.getById)
-restaurantRouter.get('/filter', restaurantController.filterRestaurants)
 restaurantRouter.get('/', restaurantController.searchRestaurants)
 restaurantRouter.put('/:restaurantId', upload, passport.authenticate('jwt', {session: false}),
     adminAuth, restaurantController.updateRestaurant)

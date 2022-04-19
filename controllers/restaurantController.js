@@ -104,31 +104,49 @@ exports.getById = async (req, res) => {
 exports.searchRestaurants = async (req, res) => {
     try {
         let query = req.query["query"] ? req.query["query"] : ""
+        let kitchens = JSON.parse(req.query["kitchens"] || ['null']);
         let page = 1;
+        if (kitchens != null) {
+            let arr = []
+            for (let kitchen of kitchens) {
+                let existKitchen = await db.Kitchen.findOne({
+                    where: {
+                        id: kitchen
+                    }
+                })
+                if (existKitchen != null) {
+                    arr.push(existKitchen)
+                }
+            }
+            if (arr.length != kitchens.length) {
+                res.status(500).send({error: "Input exists kitchens!"})
+            }
+        }
+        if (!query && kitchens == null) {
+            res.status(500).send({error: "Input search values!"})
+        }
+        if (!query && kitchens.length == 0) {
+            res.status(500).send({error: "Input search values!"})
+        }
+        const whereForName = {}
+        const whereForKitchens = {}
+        if (query) {
+            whereForName.name = {[Op.like]: "%" + query + "%"}
+        }
+        if (kitchens != null && kitchens.length != 0) {
+            whereForKitchens.kitchenId = kitchens
+        }
         if (parseInt(req.query['page'])) {
             if (parseInt(req.query['page']) > 0) {
                 page = parseInt(req.query['page'])
             }
         }
-
-        let restaurantsCount = await db.Restaurant.findOne({
-            where: sequelize.or({
-                    name: {
-                        [Op.like]: "%" + query + "%"
-                    }
-                },
-            ),
-            attributes: [
-                [sequelize.fn('count', sequelize.col('id')), 'total']
-            ],
-        });
-        let restaurants = await db.Restaurant.findAll({
-            where: {
-                name: {[Op.like]: "%" + query + "%"},
-            },
+        let restaurants = await db.Restaurant.findAndCountAll({
+            where: whereForName,
             include: [{
                 model: db.ResKitList,
-                attributes: ['kitchenId']
+                attributes: ['kitchenId'],
+                where: whereForKitchens
             }],
             limit: resultsPerPage.product,
             offset: resultsPerPage.product * (page - 1)
@@ -136,46 +154,15 @@ exports.searchRestaurants = async (req, res) => {
         res.send({
             restaurants,
             pageSize: resultsPerPage.product,
-            total: restaurantsCount.dataValues.total
         });
     } catch (err) {
         res.send(err)
     }
 }
 
-exports.filterRestaurants = async (req, res) => {
-    console.log("filter")
-    try {
-        let kitchens;
-        try {
-            kitchens = JSON.parse(req.body.kitchens);
-        } catch (e) {
-            throw e;
-        }
-        console.log(kitchens);
-        let restaurants = await db.Restaurant.findAll({
-            include: [{
-                model: db.ResKitList,
-                attributes: [],
-                required: true,
-                where: {
-                    kitchenId: {
-                        [sequelize.Op.in]: kitchens
-                    }
-                }
-            }],
-        });
-        res.send(restaurants);
-    } catch (e) {
-        console.log(e);
-        res.send(e)
-    }
-}
-
 exports.updateRestaurant = async (req, res) => {
     let restaurantId = req.params.restaurantId;
     let {name, image, location, phone, averageBill, amountOfPlace, rate} = req.body;
-    // let kitchens = JSON.parse(req.body.kitchens || '[]')
     let updatedRestaurant = {name, image, location, phone, averageBill, amountOfPlace, rate}
     try {
         let isUpdated = await db.Restaurant.update(updatedRestaurant, {
