@@ -7,7 +7,7 @@ let resultsPerPage = {
 
 exports.addRestaurant = async (req, res) => {
     let {name, image, location, phone, averageBill, amountOfPlace, rate} = req.body;
-    let kitchens = JSON.parse(req.body.kitchens);
+    let kitchens = JSON.parse(req.body.kitchens || '[]') ;
     let newRestaurant = {
         name: name,
         image: image,
@@ -29,8 +29,8 @@ exports.addRestaurant = async (req, res) => {
             arr.push(existKitchen)
         }
     }
-    if (kitchens == null) {
-        res.status(500).send({error: "You must input kitchenIDs"})
+    if (kitchens.length === 0) {
+        return res.status(500).send({error: "You must input kitchenIDs"})
     }
     if (arr.length == kitchens.length) {
         db.Restaurant.create(newRestaurant)
@@ -122,12 +122,6 @@ exports.searchRestaurants = async (req, res) => {
                 res.status(500).send({error: "Input exists kitchens!"})
             }
         }
-        if (!query && kitchens == null) {
-            res.status(500).send({error: "Input search values!"})
-        }
-        if (!query && kitchens.length == 0) {
-            res.status(500).send({error: "Input search values!"})
-        }
         const whereForName = {}
         const whereForKitchens = {}
         if (query) {
@@ -146,7 +140,11 @@ exports.searchRestaurants = async (req, res) => {
             include: [{
                 model: db.ResKitList,
                 attributes: ['kitchenId'],
-                where: whereForKitchens
+                where: whereForKitchens,
+                include: [{
+                    model: db.Kitchen,
+                    attributes: ['name'],
+                }]
             }],
             limit: resultsPerPage.product,
             offset: resultsPerPage.product * (page - 1)
