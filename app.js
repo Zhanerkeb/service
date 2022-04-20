@@ -31,4 +31,4 @@ app.use('/api/order', order.orderRouter);
 app.use('/api/favorite', favorite.favoriteRouter);
 app.use('/api/reskit', reskit.reskitRouter)
 
-app.listen(5000, () => console.log(`Server running on port 9000`));
+app.listen(9000, () => console.log(`Server running on port 9000`));
