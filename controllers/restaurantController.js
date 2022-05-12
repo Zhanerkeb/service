@@ -138,11 +138,13 @@ exports.searchRestaurants = async (req, res) => {
         let restaurants = await db.Restaurant.findAndCountAll({
             where: whereForName,
             include: [{
+required: false,
                 model: db.ResKitList,
                 attributes: ['kitchenId'],
                 where: whereForKitchens,
                 include: [{
                     model: db.Kitchen,
+required: false,
                     attributes: ['name'],
                 }]
             }],
