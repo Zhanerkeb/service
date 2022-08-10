@@ -8,13 +8,13 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         }
     }, {});
-    Review.associate = function(models) {
+    Review.associate = function (models) {
         models.Review.belongsTo(models.User, {
             foreignKey: 'reviewId',
             onDelete: 'CASCADE'
         });
     };
-    Review.associate = function(models) {
+    Review.associate = function (models) {
         models.Review.belongsTo(models.Restaurant, {
             foreignKey: 'restaurantId',
             onDelete: 'CASCADE'

@@ -13,6 +13,7 @@ const restaurant = require('./routers/api/restaurant');
 const review = require('./routers/api/review');
 const order = require('./routers/api/order');
 const favorite = require('./routers/api/favorite');
+const reskit = require('./routers/api/reskit')
 
 const db = require('./models/index');
 db.sequelize.sync({logging: false}).then(() => {
@@ -28,6 +29,6 @@ app.use('/api/restaurant', restaurant.restaurantRouter);
 app.use('/api/review', review.reviewRouter);
 app.use('/api/order', order.orderRouter);
 app.use('/api/favorite', favorite.favoriteRouter);
+app.use('/api/reskit', reskit.reskitRouter)
 
-app.listen(9000, () => console.log(`Server running on port 5000`));
-
+app.listen(9000, () => console.log(`Server running on port 9000`));
