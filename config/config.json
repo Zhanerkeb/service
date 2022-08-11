@@ -3,7 +3,7 @@
     "username": "postgres",
     "password": "56654",
     "database": "restaurant",
-    "host": "pg_chat",
+    "host": "0.0.0.0",
     "dialect": "postgres",
     "pg": "^7.11.0",
     "define": {
