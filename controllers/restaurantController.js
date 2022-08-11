@@ -2,7 +2,7 @@ const db = require('../models');
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
 let resultsPerPage = {
-    product: 6,
+    product: 5,
 };
 
 exports.addRestaurant = async (req, res) => {
@@ -103,7 +103,7 @@ exports.getById = async (req, res) => {
 
 exports.searchRestaurants = async (req, res) => {
     try {
-        let query = req.query["query"] ? req.query["query"] : ""
+        let query = req.query["query"] ? req.query["query"]: ""
         let kitchens = JSON.parse(req.query["kitchens"] || ['null']);
         let page = 1;
         if (kitchens != null) {
@@ -139,13 +139,13 @@ exports.searchRestaurants = async (req, res) => {
             where: whereForName,
             distinct: true,
             include: [{
-required: false,
+                required: false,
                 model: db.ResKitList,
                 attributes: ['kitchenId'],
                 where: whereForKitchens,
                 include: [{
                     model: db.Kitchen,
-required: false,
+                    required: false,
                     attributes: ['name'],
                 }]
             }],

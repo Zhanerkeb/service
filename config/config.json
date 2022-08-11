@@ -1,14 +1,14 @@
 {
   "development": {
     "username": "postgres",
-    "password": "1307",
+    "password": "56654",
     "database": "restaurant",
-    "host": "127.0.0.1",
+    "host": "pg_chat",
     "dialect": "postgres",
+    "pg": "^7.11.0",
     "define": {
       "timestamps": false
-    },
-    "timezone": "+12:00"
+    }
   },
   "test": {
     "username": "root",
