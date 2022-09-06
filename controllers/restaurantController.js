@@ -135,7 +135,7 @@ exports.searchRestaurants = async (req, res) => {
                 page = parseInt(req.query['page'])
             }
         }
-        let restaurants = await db.Restaurant.findAndCountAll({
+        let restaurants = await db.Restaurant.findAll({
             where: whereForName,
             include: [{
                 required: false,
@@ -153,6 +153,7 @@ exports.searchRestaurants = async (req, res) => {
         res.send({
             restaurants,
             pageSize: resultsPerPage.product,
+            count: restaurants.filter(item => item.ResKitLists.length)
         });
     } catch (err) {
         res.send(err)
