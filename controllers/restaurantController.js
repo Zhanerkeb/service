@@ -143,7 +143,7 @@ exports.searchRestaurants = async (req, res) => {
                 where: whereForKitchens,
                 include: [{
                     model: db.Kitchen,
-                    required: true,
+                    required: false,
                     attributes: ['name'],
                 }]
             }],
