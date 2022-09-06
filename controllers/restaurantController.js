@@ -153,7 +153,7 @@ exports.searchRestaurants = async (req, res) => {
         res.send({
             restaurants,
             pageSize: resultsPerPage.product,
-            count: restaurants.filter(item => item.ResKitLists.length)
+            count: restaurants.filter(item => item.ResKitLists.length).length
         });
     } catch (err) {
         res.send(err)
