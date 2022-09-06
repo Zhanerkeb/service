@@ -138,7 +138,7 @@ exports.searchRestaurants = async (req, res) => {
         let restaurants = await db.Restaurant.findAll({
             where: whereForName,
             include: [{
-                required: false,
+                required: true,
                 model: db.ResKitList,
                 where: whereForKitchens,
                 include: [{
