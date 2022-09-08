@@ -167,7 +167,7 @@ exports.searchRestaurants = async (req, res) => {
         res.send({
             restaurants,
             pageSize: resultsPerPage.product,
-            count: resCount
+            count: 0
         });
     } catch (err) {
         res.send(err)
