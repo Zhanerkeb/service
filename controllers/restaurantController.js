@@ -163,11 +163,11 @@ exports.searchRestaurants = async (req, res) => {
     }],
             limit: resultsPerPage.product,
             offset: resultsPerPage.product * (page - 1)
-        }).length
+        })
         res.send({
             restaurants,
             pageSize: resultsPerPage.product,
-            count: 0
+            count: resCount
         });
     } catch (err) {
         res.send(err)
