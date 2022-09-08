@@ -150,7 +150,7 @@ exports.searchRestaurants = async (req, res) => {
             limit: resultsPerPage.product,
             offset: resultsPerPage.product * (page - 1)
         });
-        let resCount = await db.Restaurant.findAll({
+        let resCount = await db.Restaurant.count({
         where: whereForName,
         include: [{
             model: db.ResKitList,
@@ -158,11 +158,9 @@ exports.searchRestaurants = async (req, res) => {
             required: true,
             include: [{
                 model: db.Kitchen,
-                required: true,
+                required: false,
             }]
-    }],
-            limit: resultsPerPage.product,
-            offset: resultsPerPage.product * (page - 1)
+        }]
         })
         res.send({
             restaurants,
