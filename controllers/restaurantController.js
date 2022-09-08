@@ -150,10 +150,21 @@ exports.searchRestaurants = async (req, res) => {
             limit: resultsPerPage.product,
             offset: resultsPerPage.product * (page - 1)
         });
+        const count = await  db.Restaurant.findAll({
+        include: [{
+            model: db.ResKitList,
+            attributes: ['id'],
+            required: true,
+            include: [{
+                model: db.Kitchen,
+                required: true,
+            }]
+        }],
+        }).length
         res.send({
             restaurants,
             pageSize: resultsPerPage.product,
-            count: restaurants.filter(item => item.ResKitLists.length).length
+            count: count
         });
     } catch (err) {
         res.send(err)
