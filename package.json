@@ -28,7 +28,7 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "pg": "^7.17.1",
-    "sequelize": "^5.21.3",
+    "sequelize": "^6.28.2",
     "validator": "^12.1.0"
   },
   "devDependencies": {
